@@ -4,6 +4,7 @@ const port = 8000;
 const db = require('./config/mongoose');
 
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 app.use(express.urlencoded());
 
