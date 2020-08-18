@@ -3,19 +3,19 @@ const mongoose = require('mongoose');
 
 //creating a new Schema 
 const reportSchema = new mongoose.Schema({
-    DoctorName: {
+    doctorName: {
         type: String,
         required: true
     },
-    Status: {
+    status: {
         type: String,
         required: true
     },
-    Date: {
+    date: {
         type: Date,
         default: Date.now
     },
-    Patient: {
+    patient: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Patient',
         required: true

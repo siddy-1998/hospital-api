@@ -21,8 +21,8 @@ module.exports.register = async function (req, res) {
             return;
         } else {
             
-            let new_doctor = await Doctor.create(req.body);
-            if (new_doctor) {
+            let newDoctor = await Doctor.create(req.body);
+            if (newDoctor) {
                 res.status(200).json({
                     "Message": "New Doctor registered"
                 });
