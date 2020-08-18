@@ -3,6 +3,9 @@ const Report = require('../../../models/report');
 
 //register patient
 module.exports.register = async function (req, res) {
+
+    console.log(req.body);
+
     if (req.body == undefined || req.body.phone == undefined || req.body.phone.length == 0) {
         return res.status(200).json({
             "message": "Cannot register patient without Phone number!"
@@ -10,13 +13,23 @@ module.exports.register = async function (req, res) {
     }
 
     try {
-        let newPatient = await Patient.create(req.body);
-        if (newPatient) {
-            return res.status(200).json({
-                "message": "New Patient Registered"
-            });
-        }
+        
+        let patient = await Patient.findOne({"phone": req.body.phone });
 
+        if (patient) {
+            return res.status(200).json({
+                "message": "Patient is already registered"
+            });
+            
+        } else {
+            let newPatient = await Patient.create(req.body);
+            if (newPatient) {
+                return res.status(200).json({
+                    "message": "New Patient Registered"
+                });
+
+            }
+        }
     } catch (err) {
         return res.status(500).send({
             "message": "Internal Server Error"
@@ -51,7 +64,7 @@ module.exports.createReport = async function (req, res) {
             patient.report.push(newReport);
             patient.save();
             return res.status(200).json({
-                "message": "Report created"
+                "message": "New Report created"
             });
         }
     } catch (err) {
@@ -85,14 +98,18 @@ module.exports.allReports = async function (req, res) {
             const allreports = [];
             for (let i = 0; i < patient.report.length; i++) {
                 let oneReport = await Report.findById(patient.report[i]);
+                let yr = oneReport.date.getFullYear();
+                let mon = oneReport.date.getMonth()+1 + '-';
+                let day = oneReport.date.getDate() + '-';
+                let date = day.concat(mon,yr);
                 allreports.push({
-                    "Doctor's Name": oneReport.DoctorName,
-                    "Status Of Covid-19": oneReport.Status,
-                    "Report Created At": oneReport.Date
+                    "Doctor's Name": oneReport.doctorName,
+                    "Status Of Covid-19": oneReport.status,
+                    "Report Created On": date
                 });
             }
 
-            console.log(allreports);
+           // console.log(allreports);
             return res.status(200).json(allreports);
         }
 
